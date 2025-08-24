@@ -1,0 +1,525 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css"/>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script> 
+ 
+ <style>
+  @font-face {
+  font-family: 'Jost-Variable';
+  src: url('https://cdn.shopify.com/s/files/1/0570/0232/8259/files/Jost-Regular.woff2?v=1752316010') format('woff2'),
+       url('https://cdn.shopify.com/s/files/1/0570/0232/8259/files/Jost-Regular.woff?v=1752316011') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+  @font-face {
+  font-family: 'Jost-Variable-Bold';
+  src: url('https://cdn.shopify.com/s/files/1/0570/0232/8259/files/Jost-Bold.woff2?v=1752316261') format('woff2'),
+       url('https://cdn.shopify.com/s/files/1/0570/0232/8259/files/Jost-Bold.woff?v=1752316261') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+    .tab-collection-section{
+    max-width: 1600px;
+    margin: 0 auto;
+    }
+    .inner-tab-wrapper{
+    width: 100%;
+    padding: 0;
+    background: linear-gradient(180deg, #1f252f, #15191ff2 49.48%, #232c3a);
+    margin-top: 0px;
+    padding-top: 30px;
+    padding-bottom: 80px;
+    color: #fff;
+    padding: 30px 80px 80px;
+  }
+  .top-wrapper {
+    display: flex;
+    justify-content: space-between;
+        align-items: center;
+    margin-bottom: 35px;
+    column-gap: 10px;
+}
+  .product img {
+    width: 100%;
+    border-radius: 15px;
+    display: block;
+    border: 5px solid #FFF;
+  }
+  .collection-title{
+    font-size: 34px;
+    line-height: 1.1;
+    font-family: Jost-Variable-Bold;
+  }
+  .slick-list{
+    margin-bottom: 50px;
+  }
+  .slick-track{
+   margin-bottom: 20px; 
+  }
+  .desc {
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.3;
+    font-family: Jost-Variable;
+  }
+  .slider-container {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+    margin: 0 auto;
+  }
+  .slider-track {
+    height: 8px;
+    border-radius: 4px;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+  }
+  .slick-track{
+    margin-left: 0;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    pointer-events: auto;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: transparent;
+    border: 5px solid #fff;
+    cursor: pointer;
+    position: relative;
+    margin-top: 0px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    pointer-events: auto;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: transparent;
+    border: 5px solid #FFF;
+    cursor: pointer;
+    position: relative;
+  }
+  .label-bubble {
+    font-family: Jost-Variable;
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #3a3a3a;
+    border-radius: 5px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    user-select: none;
+    min-width: 50px;
+    text-align: center;
+    color: white;
+  }
+  .tab-main-wrapper{
+    background: #ffffff17;
+    border: 1px solid rgba(255, 255, 255, .69);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .tab-inner {
+    line-height: 1.1;
+    padding: 14px 60px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: Jost-Variable;
+}
+  .tab-inner:hover {
+    transform: scale(1.025);
+    transition: transform .25s ease;
+  }
+  .tab-inner.active {
+    background-color: #fff;
+    color: #000;
+  }
+  .collection-product-grid{
+    display: none;
+  }
+    .collection-product-grid.active{
+    display: block;
+  }
+  .slick-dots{
+    display: flex;
+    justify-content: center;
+  }
+  .slick-dots li{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+  }
+.slick-dots button {
+  background: #ababab5e!important;
+  opacity: 1;
+  display: block;
+  width: 10px !important;
+  height: 10px !important;
+  padding: 0;
+  border: none;
+  border-radius: 100%;
+  text-indent: -9999px;
+}
+.slick-prev{
+    left: -50px;
+    top: 40%;
+    transform: translateY(-40%);
+    position: absolute;
+  }
+  .slick-next{
+    right: -50px;
+    top: 40%;
+    transform: translateY(-40%);
+    position: absolute;
+  }
+  .slick-slide {
+    padding-right: 20px;
+  }
+  .slick-dots .slick-active{
+    border: 1px solid #fff;
+    padding: 4px;
+  } 
+  .slick-dots .slick-active button {
+    background: #d3d0d0 !important;
+  }
+  .collection-product-grid{
+    margin-bottom: 28px;
+    width: 90%;
+    margin: 0 auto;
+  }
+
+@media (max-width: 1365px) {
+  .inner-tab-wrapper{
+  padding: 30px 20px 70px;
+  }
+  .collection-product-grid{
+    width: 100%;
+  }
+}
+@media (max-width: 767px) {
+  .collection-title {
+      font-size: 22px;
+      }
+      .top-wrapper {
+      display: grid;
+      row-gap: 20px;
+  }
+  .tab-inner {
+      padding: 5px 11px;
+  }
+  .tab-main-wrapper{
+    margin: 0 auto;
+  }
+  .slick-slide {
+      padding-right: 0px;
+  }
+  .slick-dots {
+      display: none !important;
+  }
+    .slick-dotted.slick-slider {
+      margin-bottom: 10px !important;
+  }
+  .tab-main-wrapper {
+      border-radius: 5px;
+      padding: 4px;
+  }
+  .slider-container {
+    max-width: 100%;
+  }
+  .slick-prev{
+  left: 0px;
+  }
+  .slick-next{
+  right: 0px;
+  }
+  .slick-list{
+      width: 65%;
+  margin: 0 auto;
+  }
+    .slick-track{
+  margin-bottom: 10px; 
+  }
+}
+  </style>
+
+{% assign all_colors_array = '' %}
+{% assign first_color_name = '' %}
+{% assign all_colors_name_array = '' | split: ',' %}
+{% assign iscollectionSelected = false %}
+{% for block in section.blocks %}
+  {% assign collection = collections[block.settings.tab_collection] %}
+  {% if block.settings.tab_collection != blank %}  
+    {% assign iscollectionSelected = true %}
+  {% endif %}
+  {% if collection %}
+    <div class="collection-block">
+      <ul>
+        <script>
+        let color_value = [];
+        </script>
+
+        {% for product in collection.products %}
+          {% assign product_color = product.metafields.custom.product_color.value %} 
+            {% if first_color_name == blank %}
+            {% assign first_color_name = product_color.color_name %}
+            {% endif %}                 
+            {% if product_color != blank %}
+            {% unless all_colors_array contains product_color.color_code %}
+              {% assign all_colors_array = all_colors_array | append: product_color.color_code | append: ',' %}
+            {% endunless %}            
+            <script>
+            var newColor = "{{ product_color.color_name | handleize }}";
+            if (!color_value.includes(newColor)) {
+              color_value.push(newColor);
+            }
+            console.log('value ',color_value)
+            </script>  
+            {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endfor %}
+
+{% assign all_colors_array = all_colors_array |  split: ','%}
+{% assign total = all_colors_array.size %}
+{% assign step = 100.0 | divided_by: total %}
+{% assign gradient_stops = '' %}
+
+{% for color in all_colors_array %}
+  {% assign index = forloop.index0 %}
+  {% assign percent = step | times: index %}
+  {% assign percent_float = percent | times: 100 | round %}
+  {% assign percent_decimal = percent | times: 1000 | modulo: 1000 %}
+  {% assign integer_part = percent | floor %}
+  {% assign decimal_part = percent | minus: integer_part | times: 100 | round %}
+  {% if decimal_part == 0 %}
+    {% assign decimal_str = integer_part %}
+    {% assign decimal_str = decimal_str | plus : 10 %}
+  {% else %}
+    {% assign decimal_str = integer_part | append: '.' | append: decimal_part %}
+    {% assign decimal_str = decimal_str | plus : 10 %}
+  {% endif %}
+ {% if forloop.last %}
+    {% assign gradient_stops = gradient_stops | append: color | append: ' ' | append: decimal_str | append: '%' %}
+    {% else %}
+    {% assign gradient_stops = gradient_stops | append: color | append: ' ' | append: decimal_str | append: '%,' %}
+ {% endif %}
+{% endfor %}
+{%- assign gradient_stops = gradient_stops | strip | rstrip: ',' -%}
+
+<style>
+.slider-track {
+  height: 10px;
+  border-radius: 4px;
+  background: linear-gradient(to right, {{ gradient_stops }});
+}
+</style>
+
+
+{% if iscollectionSelected %}
+<div class="tab-collection-section">
+  <div class="inner-tab-wrapper" role="list">
+    <div class="top-wrapper">   
+      {% if section.settings.title != blank %}
+      <div class="collection-title">
+        {{ section.settings.title }}
+      </div>
+      {% endif %}  
+      {% assign istitle = false %}
+        {% for block in section.blocks %}
+          {% if block.settings.tab_collection_title != blank %}    
+          {% assign istitle = true %}
+        {% endif %}
+        {% endfor %}
+        {% if istitle %}        
+        <div class="tab-main-wrapper">
+          {% for block in section.blocks %}
+            {% if block.settings.tab_collection_title != blank %}        
+              {% assign tab_title = block.settings.tab_collection_title %}  
+              <div class="tab-inner {% if forloop.first %}active{% endif%}" data-tab-name="{{ block.settings.tab_collection_title | handleize}}">{{ tab_title }}</div>
+            {% endif %}
+          {% endfor %}
+        </div> 
+        {% endif %}
+     </div>
+    <div class="collection-main-wrapper">
+        {% for block in section.blocks %}
+        {% assign collection = collections[block.settings.tab_collection] %}  
+        {% if collection %}
+        <div class="collection-product-grid {% if forloop.first %}active{% endif%}" data-tab-name="{{ block.settings.tab_collection_title | handleize }}">
+          <div class="collection-product-inner-grid">
+
+          {% for product in collection.products %}
+          {% assign product_color = product.metafields.custom.product_color.value %}
+        <div class="product {{ product_color.color_name | handleize }} " role="listitem" data-color-name="{{ product_color.color_name | handleize }}">
+          <img src="{{ product.featured_image | img_url: '500x' }}" alt="{{ product.title }}">
+          <div class="desc">
+            {{ product.title}}
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+        </div> 
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="slider-container">
+      <div class="slider-track">
+      </div>
+      <input id="colorrange" aria-label="Wine tasting color slider" aria-valuemax="100" aria-valuemin="0" aria-valuenow="70" max="100" min="0" type="range" value="0"/>
+      <div class="label-bubble" style="left: 0%;">
+        {{first_color_name}}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<script>
+
+$(function() {
+  console.log('color_value ',color_value)
+  let fc = '.' + color_value[0];
+  console.log('fc ',fc)
+  $(".collection-product-inner-grid").slick({
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    arrows: true,
+    infinite: false,
+    dots:true,
+    responsive: [
+    {
+      breakpoint: 767,
+      settings: {
+        slidesToShow: 1
+      }
+    }
+    ]
+    });
+    $(".collection-product-inner-grid").slick('slickFilter', fc);
+    const colorrange = document.getElementById('colorrange');
+    const labelBubble = document.querySelector('.label-bubble'); 
+    colorrange.addEventListener('input', () => {
+    const scrollpercent = (colorrange.value / colorrange.max) * 100;
+    labelBubble.style.left = `${scrollpercent}%`;
+    console.log('scrollpercent ',scrollpercent);
+    const colors = color_value;
+    console.log(colors)
+    function getColorNameDynamic(value, colorList) {
+    const segments = colorList.length;
+    console.log('segments ',segments)
+    const stepSize = 100 / segments;
+    console.log('stepSize ',stepSize)
+    for (let i = 0; i < segments; i++) {
+      const start = i * stepSize;
+      const end = (i + 1) * stepSize;
+
+      if (value >= start && value <= end) {
+        return colorList[i];
+      }
+    }
+    return colorList[colorList.length - 1]; 
+  }
+
+  const val = parseFloat(colorrange.value);
+  console.log('val ',val)
+  const colorName = getColorNameDynamic(val, colors);
+  console.log('colorName ',colorName)
+  const capcolorname = colorName.charAt(0).toUpperCase() + colorName.slice(1);
+  labelBubble.textContent = capcolorname;
+  let new_fc = '.' + colorName;
+  $(".collection-product-inner-grid").slick('slickUnfilter');
+  $(".collection-product-inner-grid").slick('slickFilter', new_fc);
+});
+
+    let tab_value = document.querySelectorAll('.tab-inner');
+    let tab_collection = document.querySelectorAll('.collection-product-grid');
+    tab_value.forEach(function(e){
+    e.addEventListener('click',function(){
+        tab_value.forEach(function(t) {
+            t.classList.remove('active');
+        });
+        this.classList.add('active');
+        tab_collection.forEach(function(e){
+          e.classList.remove('active');
+        })
+        const selectedTab = this.getAttribute('data-tab-name');     
+        tab_collection.forEach(grid => {
+          const gridTabName = grid.getAttribute('data-tab-name');
+          if (gridTabName === selectedTab) {
+            grid.classList.add('active');
+          } else {
+            grid.classList.remove('active');
+          }
+        });
+        $(".collection-product-inner-grid").slick('setPosition');
+        })
+})
+
+$(window).on('resize', function(){
+  $(".collection-product-inner-grid").slick('setPosition');
+});  
+
+});
+
+
+  </script>
+{% schema %}
+  {
+    "name": "Tab collection",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Collection title"
+        }
+      ],
+    "blocks": [
+        {
+            "type": "collection",
+            "name": "Collection",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "tab_collection_title",
+                    "label": "Tab collection title"
+                },
+                {
+                    "type": "collection",
+                    "id": "tab_collection",
+                    "label": "Collection"
+                }
+            ]
+        }
+    ],
+    "presets": [
+      {
+        "name": "Tab collection"
+      }
+    ]
+  }
+{% endschema %}

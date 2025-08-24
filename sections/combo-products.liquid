@@ -1,0 +1,172 @@
+{% if product.metafields.custom.similar_products != blank %}
+<section class="page-width">
+    <div class="related-products-wrapper">
+            {% assign all_similar = product.metafields.custom.similar_products.value %}
+             <h2 class="product-recommendations__heading">Add combo with main products</h2>
+            <ul class="grid grid--2-col product-grid grid--3-col-tablet grid--one-third-max grid--3-col-desktop grid--quarter-max">
+               <li class="grid__item">
+                {% render 'product-card',
+                product_card_product: product,
+                media_size: section.settings.image_ratio,
+                show_secondary_image: section.settings.show_secondary_image,
+                add_image_padding: section.settings.add_image_padding,
+                show_vendor: section.settings.show_vendor,
+                show_image_outline: section.settings.show_image_outline,
+                show_rating: section.settings.show_rating,
+                isbundle:true
+              %}
+                </li> 
+            {% for product in all_similar %}
+                <li class="grid__item">
+                {% render 'product-card',
+                product_card_product: product,
+                media_size: section.settings.image_ratio,
+                show_secondary_image: section.settings.show_secondary_image,
+                add_image_padding: section.settings.add_image_padding,
+                show_vendor: section.settings.show_vendor,
+                show_image_outline: section.settings.show_image_outline,
+                show_rating: section.settings.show_rating,
+                isbundle:true
+              %}
+                </li>
+            {% endfor %}
+            </ul>
+    </div>
+    <div class="combo-atc"><div class="atc-btn-element">Add Combo</div></div>
+</section>
+{% endif %}
+
+<style>
+.combo-atc{
+  text-align: center;
+}
+.atc-btn-element{
+    display: inline-block;
+    background: #000;
+    color: #fff;
+    padding: 5px 10px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+</style>
+
+<script>
+  document.querySelector('.atc-btn-element').addEventListener('click', function () {
+  const allCheckboxGroups = document.querySelectorAll('.is-combo');
+  const selectedItems = [];
+
+  allCheckboxGroups.forEach(function (checkbox) {
+      console.log('aaa')
+
+    if (checkbox && checkbox.checked) {
+        console.log('first')
+      const form = checkbox.closest('.card-wrapper').querySelector('form');
+
+      if (form) {
+          console.log('second')
+        const variantId = form.querySelector('input[name="id"]').value;
+          console.log('variantId ',variantId)
+        selectedItems.push({
+          id: variantId,
+          quantity: 1
+        });
+      }
+    }
+  });
+console.log('selectedItems ',selectedItems)
+  if (selectedItems.length > 0) {
+    // Add all items to cart via AJAX
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        items: selectedItems
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Items added to cart:', data);
+      // Optional: open cart drawer or refresh cart UI
+    })
+    .catch(error => {
+      console.error('Error adding to cart:', error);
+    });
+  } else {
+    console.log('No checkboxes selected.');
+  }
+});
+
+</script>
+
+
+{% schema %}
+{
+  "name": "Combo products",
+  "class": "combo-products",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.main-collection-product-grid.settings.header__3.content"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.main-collection-product-grid.settings.image_ratio.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_image_padding",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.add_image_padding.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_outline",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.show_image_outline.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_vendor.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_rating.label",
+      "info": "t:sections.main-collection-product-grid.settings.show_rating.info"
+    }
+  ],
+    "presets": [
+        {
+            "name": "Combo products"
+        }
+    ]
+}
+{% endschema %}
+

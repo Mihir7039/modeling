@@ -1,0 +1,268 @@
+{% assign all_products = collections.all.products %}
+      <div class="collection page-width">
+        <ul id="Huratips-Loop" data-id="{{ section.id }}" class="
+          grid grid--2-col negative-margin product-grid
+          {% if collection.products_count < 4 %} grid--{{ collection.products_count }}-col-tablet{% else %}
+            {% if collection.products_count == 4 %} grid--4-col-desktop{% else %} grid--3-col-tablet grid--one-third-max grid--4-col-desktop grid--quarter-max{% endif %}
+          {% endif %}">
+ {%- for product in all_products -%}
+            <li class="grid__item">
+              {% render 'product-card',
+                product_card_product: product,
+                media_size: section.settings.image_ratio,
+                show_secondary_image: section.settings.show_secondary_image,
+                add_image_padding: section.settings.add_image_padding,
+                show_vendor: section.settings.show_vendor,
+                show_image_outline: section.settings.show_image_outline,
+                show_rating: section.settings.show_rating
+              %}
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        <div class="static-bundle-wrapper" disabled="disabled">Add bundle</div>
+      </div>
+
+<style>
+  .static-bundle-wrapper{
+    position: fixed;
+    bottom: 0;
+    background: red;
+    color: #fff;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 10px;
+    cursor:pointer;    
+  }
+  .add-bundle-product[disabled] ,.static-bundle-wrapper[disabled]{
+  background-color: grey; 
+  color: #aaa; 
+  cursor: not-allowed; 
+  pointer-events: none; 
+}
+</style>
+<script>
+
+$(document).ready(function() {
+  let bundleData = [];
+  $('.add-bundle-product').on('click', function(e) {
+    $(this).attr('disabled', 'disabled'); 
+    e.preventDefault(); 
+
+    let variantId = $(this).attr('data-variant-id');
+    
+    bundleData.push({
+      variant_id: variantId,
+      quantity: 1
+    });
+
+    console.log('Current bundleData: ', bundleData); 
+
+    if(bundleData.length >= 3){
+      $('.add-bundle-product').attr('disabled', 'disabled');    
+      $('.static-bundle-wrapper').removeAttr('disabled'); 
+    }
+  });
+
+  $('.static-bundle-wrapper').on('click', function(e) {
+    e.preventDefault(); 
+
+    if(bundleData.length === 0) {
+      console.log("No items selected");
+      return;
+    }
+
+    console.log('Adding products to cart:', bundleData); 
+    
+    let items = bundleData.map(function(item) {
+        let currentTime = Date.now()
+      return {
+        id: item.variant_id, 
+        quantity: item.quantity,
+        properties: {
+          current_time: currentTime  
+        }
+      };
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: '/cart/add.js',
+      data: {
+        items: items,  
+      },
+      dataType: 'json',
+      success: function(response) {
+        console.log('Added to cart ', response); 
+        setTimeout(function() {
+          window.location.href = '/cart'; 
+        }, 3000);
+      },
+      error: function(response) {
+        console.log('Error to cart ', response); 
+      }
+    });
+  });
+
+
+
+  
+  
+});
+
+
+  
+// $(document).on('click', '.remove-bundle-products', function() {
+
+
+  
+//   console.log('Removing items...');
+  
+//   const targetTime = $(this).attr('data-remove-bundle');
+//   console.log('Target Time: ', targetTime);
+
+//   $.get('/cart.js', function(cart) {
+//     // Check if cart.items is defined before proceeding
+//     if (cart && cart.items) {
+//       const itemsToRemove = cart.items
+//         .filter(item => item.properties.current_time === targetTime) // Filter items with matching current_time
+//         .map(item => item.id); // Get item IDs
+
+//       if (itemsToRemove.length > 0) {
+//         let updates = {};
+
+//         // Set quantity to 0 for the items to be removed
+//         itemsToRemove.forEach(itemId => {
+//           updates[itemId] = 0;
+//         });
+
+//         console.log('Updates: ', updates);
+
+//         $.ajax({
+//           type: 'POST',
+//           url: '/cart/update.js',
+//           data: { updates: updates }, // Send updates object
+//           dataType: 'json',
+//           success: function(response) {
+//             console.log('Items removed:', itemsToRemove);
+//             setTimeout(function() {
+//               window.location.href = '/cart'; // Redirect to the cart page after 3 seconds
+//             }, 3000);
+//           },
+//           error: function(response) {
+//             console.log('Error updating cart:', response);
+//           }
+//         });
+//       } else {
+//         console.log('No items found with matching current_time');
+//       }
+//     } else {
+//       console.log('Cart items are undefined or empty');
+//     }
+//   }).fail(function() {
+//     console.log('Failed to retrieve cart data');
+//   });
+// });
+
+
+
+</script>      
+
+
+{% schema %}
+{
+  "name": "t:sections.main-collection-product-grid.name",
+  "class": "spaced-section collection-grid-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 24,
+      "step": 4,
+      "default": 16,
+      "label": "t:sections.main-collection-product-grid.settings.products_per_page.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-collection-product-grid.settings.header__3.content"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.main-collection-product-grid.settings.image_ratio.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_image_padding",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.add_image_padding.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_outline",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.show_image_outline.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_vendor.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_rating.label",
+      "info": "t:sections.main-collection-product-grid.settings.show_rating.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-collection-product-grid.settings.header__1.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.enable_filtering.label",
+      "info": "t:sections.main-collection-product-grid.settings.enable_filtering.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "collapse_on_larger_devices",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.collapse_on_larger_devices.label"
+    }
+  ]
+}
+{% endschema %}
+      
