@@ -132,8 +132,120 @@
   </head>
 
 
-<h2>Hello models working on home page aaaaaaaaaaaaa</h2>
-<h3>this is live theme...</h3>
+<div id="announcement-bar"></div>
+<div id="countdown-timer" style="display:none;"></div>
+
+
+
+<script>
+  var now = new Date();
+  console.log('Current Date and Time: ', now);
+
+  // Delivery Date Logic
+  var deliveryDate;
+  if (now.getDay() == 0) { // Sunday
+    deliveryDate = new Date(now.setDate(now.getDate() + 3)); // Wednesday
+  } else if (now.getDay() == 1) { // Monday
+    deliveryDate = new Date(now.setDate(now.getDate() + 3)); // Thursday
+  } else if (now.getDay() == 2) { // Tuesday
+    deliveryDate = new Date(now.setDate(now.getDate() + 3)); // Friday
+  } else if (now.getDay() >= 3) { // Wednesday or later
+    deliveryDate = new Date(now.setDate(now.getDate() + (10 - now.getDay()))); // Next week's Wednesday
+  }
+
+  var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  var formattedDeliveryDate = deliveryDate.toLocaleDateString('en-US', options);
+
+  // Display the delivery date message
+  document.getElementById('announcement-bar').innerHTML = "🚚 Order now for delivery on <strong>" + formattedDeliveryDate + "</strong>";
+
+  // Countdown Timer Logic (Only between 9 PM and 12 AM)
+  function getCutoffTime() {
+    // We want the cutoff time to be at 12 AM (midnight)
+    var cutoffTime = new Date(now);
+    
+    // If it's after 9 PM but before midnight, countdown to 12 AM (midnight)
+    if (now.getHours() >= 21 && now.getHours() < 24) {
+      cutoffTime.setHours(24, 0, 0, 0); // Set to 12 AM (midnight)
+      return cutoffTime;
+    } else {
+      return null; // No countdown if outside 9 PM to 12 AM window
+    }
+  }
+
+  function updateCountdown() {
+    var cutoffTime = getCutoffTime();
+
+    // If cutoffTime is null, no countdown should be shown
+    if (!cutoffTime) {
+      document.getElementById('countdown-timer').style.display = 'none';
+      return;
+    }
+
+    var timeLeft = cutoffTime - now; // Time left in milliseconds
+
+    if (timeLeft <= 0) {
+      document.getElementById('countdown-timer').innerHTML = "The cutoff has passed for today!";
+      return;
+    }
+
+    // Calculate remaining hours, minutes, and seconds
+    var hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60)); // Full hours left
+    var minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); // Remaining minutes
+    var secondsLeft = Math.floor((timeLeft % (1000 * 60)) / 1000); // Remaining seconds
+
+    // Format the countdown in "hr:min:sec" format
+    var countdownString = hoursLeft + "hr:" + minutesLeft + "min:" + secondsLeft + "sec left";
+
+    // Display the countdown timer
+    document.getElementById('countdown-timer').style.display = 'block';
+    document.getElementById('countdown-timer').innerHTML = "⏰ Time left to place your order: " + countdownString;
+  }
+
+  // Update the countdown every second
+  setInterval(updateCountdown, 1000);
+</script>
+
+
+
+
+  {% comment %}
+
+today--  {{ 'now' | date: "%A, %B %d, %Y" }}
+
+
+  {% assign today = 'now' | date: '%w' %}  {%- comment -%} 0 = Sunday, 1 = Monday, ..., 6 = Saturday {%- endcomment -%}
+
+  
+{% assign current_timestamp = 'now' | date: '%s' %}
+{% assign seconds_in_a_day = 86400 %}
+{% assign days_to_add = 0 %}
+
+{% if today == '0' %}
+  {%- comment -%} Sunday → this Wednesday (3 days ahead) {%- endcomment -%}
+  {% assign days_to_add = 3 %}
+{% elsif today == '1' %}
+  {%- comment -%} Monday → this Thursday (3 days ahead) {%- endcomment -%}
+  {% assign days_to_add = 3 %}
+{% elsif today == '2' %}
+  {%- comment -%} Tuesday → this Friday (3 days ahead) {%- endcomment -%}
+  {% assign days_to_add = 3 %}
+{% else %}
+  {%- comment -%} Wednesday or later → next week's Wednesday {%- endcomment -%}
+  {% assign days_to_add = 10 | minus: today %}
+{% endif %}
+
+{% assign seconds_to_add = days_to_add | times: seconds_in_a_day %}
+{% assign delivery_timestamp = current_timestamp | plus: seconds_to_add %}
+{% assign delivery_date = delivery_timestamp | date: '%A, %B %d' %}
+
+<div class="announcement-bar">
+  🚚 Order now for delivery on <strong>{{ delivery_date }}</strong>
+</div>
+
+{% endcomment %}
+
+
   <body class="gradient">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ "accessibility.skip_to_text" | t }}
